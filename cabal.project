@@ -1,0 +1,2 @@
+packages: json-parser-benchmark.cabal
+with-compiler: /usr/local/haskell/ghc/9.2.3/bin/ghc-9.2.3

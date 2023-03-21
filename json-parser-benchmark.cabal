@@ -1,0 +1,84 @@
+cabal-version: 2.2
+
+name:               json-parser-benchmark
+version:            0.0.0.1
+synopsis:           Program for testing/benchmarking Haskell JSON parsing capabilities
+category:           benchmark
+author:             Ramin Honary
+maintainer:         ramin.honary@gmail.com
+copyright:          2023 Ramin Honary, all rights reserved
+license:            AGPL-3.0-or-later
+build-type:         Simple
+
+common config-common
+  -- Compiler configuration settings common to both versions of the
+  -- benchmark.  What the two do not have in common are the executable
+  -- name and the JSON parser package dependencies.
+
+  build-depends: base, bytestring, filepath,
+    -- The `base`, `bytestring`, and `filepath` packages are almost
+    -- always installed by default for most GHC installations, as are
+    -- other packages like `deepseq` and `text`. They still need to be
+    -- listed as "build-depends" so the data types exported by these
+    -- packages become available for use.
+
+  hs-source-dirs: .
+
+  default-language: Haskell2010
+
+  ghc-options:
+    -- Enable full optimization.
+    -O3 -Wall -fno-warn-name-shadowing -fno-warn-unused-do-bind
+
+  build-depends:
+
+  default-extensions:
+    -- This is a reasonable set of default language extensions used by
+    -- a majority of Haskell projects. Not all of these language
+    -- extensions are used actually in this particular project.
+    DataKinds
+    DeriveDataTypeable
+    DeriveFunctor
+    DerivingStrategies
+    DerivingVia
+    ExistentialQuantification
+    FlexibleContexts
+    FlexibleInstances
+    FunctionalDependencies
+    GADTs
+    GeneralizedNewtypeDeriving
+    ImplicitParams
+    LambdaCase
+    MultiParamTypeClasses
+    NoMonomorphismRestriction
+    OverloadedStrings
+    OverloadedLabels
+    PolyKinds
+    RankNTypes
+    ScopedTypeVariables
+    StandaloneDeriving
+    TypeFamilies
+
+----------------------------------------------------------------------------------------------------
+
+executable jpb-aeson
+  -- This version of the benchmark program uses Aeson, the most-widely
+  -- used JSON parser in the Haskell software ecosystem
+  import: config-common
+  main-is: WithAeson.hs
+  other-modules: ArgsMain
+  build-depends:
+      aeson
+    , deepseq
+
+executable jpb-hermes
+  -- This version of the benchmark program uses Hermes, which is a
+  -- wrapper around the SIMDJSON C++ parsing library.
+  import: config-common
+  main-is: WithHermes.hs
+  other-modules: ArgsMain
+  build-depends:
+      containers
+    , hermes-json
+    , text
+    , vector
