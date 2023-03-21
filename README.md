@@ -30,8 +30,7 @@ memory. Without this, the compiler will take advantage of Haskell lazy
 semantics to optimize away the unnecessary work of storing the entire
 parsed JSON data structure in memory, which it would otherwise do
 since this data structure is never used in any way. **DeepSeq** is
-usually installed by default with most Haskell installations, and so
-is available on most systems.
+usually installed by default with most Haskell installations.
 
 ### Hermes
 
@@ -47,13 +46,13 @@ in the near future.
 For the Hermes version of the test, we cannot use `deepseq` because
 the fully parsed data structure is not exposed to Haskell from the C++
 library. Instead you are supposed to lazily (on-demand) traverse the
-structure and extract only portions you need, while parser only parses
-that which is necessary. In other words the C++ JSON parser is also
-lazy.
+structure and extract only portions you need so that the parser only
+parses that which is necessary. In other words the C++ JSON parser is
+also lazy.
 
-To defeat lazy semantics, a JSON data structure is defined which
+To avoid lazy evaluation, a JSON data structure is defined which
 forces the entire structure to be copied from C++ to Haskell. This
-could possibly double the amount of memory that would consumed by
+could possibly double the amount of memory that would be consumed by
 simply using the C++ parser alone.
 
 **Note** that this would not be the case in ordinary production
@@ -62,7 +61,7 @@ ordinarily be used, but this is not possible for this particular
 benchmark given that the task is not to query or transform the JSON
 data, but simply to buffer it in memory.
 
-### Building the benchmark executables
+## Building the benchmark executables
 
 Build with `cabal` and then install it into the current working
 directory:
